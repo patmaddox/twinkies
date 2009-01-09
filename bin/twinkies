@@ -12,9 +12,11 @@ include Twinkies
 
 DataMapper.setup(:default, "sqlite3:///tmp/twinkies-test.db")
 
-get '/feed.xml' do
-  Item.refresh
+Thread.new do
+  loop { puts "refreshing tweets..."; Item.refresh; sleep(60) }
+end
 
+get '/feed.xml' do
   builder do |xml|
     xml.instruct!
     xml.rss :version => '2.0' do
