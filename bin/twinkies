@@ -17,14 +17,19 @@ end
 get '/feed.xml' do
   builder do |xml|
     xml.instruct!
-    xml.rss :version => '2.0'
-    xml.channel do
-      xml.title "padillac's twitter URL feed"
+    xml.rss :version => '2.0' do
+      xml.channel do
+        xml.title "#{ENV['TWITTER_NICK']}'s twitter URL feed"
+        xml.description "#{ENV['TWITTER_NICK']}'s twitter URL feed"
+        xml.link "http://twitter.com/#{ENV['TWITTER_NICK']}"
 
-      UrlList.new(tweets) {|t| t.text}.each do |url_item|
-        xml.item do
-          xml.title "#{url_item[:item].from_user} - #{url_item[:item].text[0..250]}..."
-          xml.link url_item[:url]
+        UrlList.new(tweets) {|t| t.text}.each do |url_item|
+          xml.item do
+            xml.title "#{url_item[:item].from_user} - #{url_item[:item].text[0..250]}..."
+            xml.link url_item[:url]
+            xml.pubDate url_item[:item].created_at
+            xml.guid url_item[:item].id, :isPermaLink => false
+          end
         end
       end
     end
