@@ -20,7 +20,7 @@ def refresh_tweets
 end
 
 def items
-  Item.all(:order => [:id.desc])
+  Item.all(:order => [:twitter_id.desc])
 end
 
 get '/feed.xml' do
