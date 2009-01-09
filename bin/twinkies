@@ -12,19 +12,9 @@ include Twinkies
 
 DataMapper.setup(:default, "sqlite3:///tmp/twinkies-test.db")
 
-def refresh_tweets
-  tweets = FriendSearcher.new(ENV['TWITTER_NICK'], ENV['TWITTER_PASS']).search('http')
-  UrlList.new(tweets) {|t| t.text}.each do |item|
-    Item.create :link => item[:url], :tweet => item[:item]
-  end
-end
-
-def items
-  Item.all(:order => [:twitter_id.desc])
-end
-
 get '/feed.xml' do
-  refresh_tweets
+  Item.refresh
+
   builder do |xml|
     xml.instruct!
     xml.rss :version => '2.0' do
@@ -33,7 +23,7 @@ get '/feed.xml' do
         xml.description "#{ENV['TWITTER_NICK']}'s twitter URL feed"
         xml.link "http://twitter.com/#{ENV['TWITTER_NICK']}"
 
-        items.each do |tweet|
+        Item.latest.each do |tweet|
           xml.item do
             xml.title "#{tweet.user} - #{tweet.text}"
             xml.link tweet.link

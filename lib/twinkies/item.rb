@@ -24,5 +24,16 @@ module Twinkies
         super
       end
     end
+
+    def self.latest
+      all :order => [:twitter_id.desc], :limit => 100
+    end
+
+    def self.refresh
+      tweets = FriendSearcher.new(ENV['TWITTER_NICK'], ENV['TWITTER_PASS']).search('http')
+      UrlList.new(tweets) {|t| t.text}.each do |item|
+        create :link => item[:url], :tweet => item[:item]
+      end
+    end
   end
 end
