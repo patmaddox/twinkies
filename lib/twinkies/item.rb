@@ -29,11 +29,5 @@ module Twinkies
         super
       end
     end
-
-    after(:create) do
-      if @existing && @existing.link != link
-        update_attributes :twitter_id => "#{twitter_id}#{id}".to_i
-      end
-    end
   end
 end

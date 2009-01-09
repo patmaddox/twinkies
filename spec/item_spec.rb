@@ -25,9 +25,9 @@ module Twinkies
           i.should == @item
         end
 
-        it "should append its internal ID if URLs are different" do
+        it "should create a new item if URLs are different" do
           i = Item.create :tweet => @tweet, :link => "http://bar"
-          i.twitter_id.should == "#{@item.twitter_id}#{i.id}".to_i
+          i.should_not == @item
         end
       end
     end
