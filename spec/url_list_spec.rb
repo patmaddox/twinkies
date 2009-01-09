@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require 'twinkies/url_list'
 require 'ostruct'
 
 module Twinkies

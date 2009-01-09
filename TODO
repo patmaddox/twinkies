@@ -2,3 +2,4 @@
 * Cache tweets locally
 * Use the "since" param of twitter search
 * show @replies to me
+* gem build with dependencies (sinatra, dm-core, do_sqlite3)

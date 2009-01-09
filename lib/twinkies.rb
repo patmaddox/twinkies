@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
-require 'active_support'
+require 'dm-core'
 require 'twitter'
 require 'twinkies/friend_searcher'
 require 'twinkies/url_list'
+require 'twinkies/item'
