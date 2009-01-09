@@ -6,16 +6,9 @@ module Twinkies
     end
 
     def search(term)
-      all_friends.in_groups_of(10,false).inject([]) { |tweets, friends|
-        tweets += Twitter::Search.new.containing(term).
-                    from(friends.join(' OR ')).fetch.results
-      }.sort_by {|t| t.id}
-    end
-
-    private
-    def all_friends
-      Twitter::Base.new(@username, @password).
-        friends.map {|f| f.screen_name }
+      Twitter::Base.new(@username, @password).timeline.select do |tweet|
+        tweet.text.include?('http')
+      end
     end
   end
 end

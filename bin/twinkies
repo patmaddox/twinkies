@@ -25,7 +25,7 @@ get '/feed.xml' do
 
         UrlList.new(tweets) {|t| t.text}.each do |url_item|
           xml.item do
-            xml.title "#{url_item[:item].from_user} - #{url_item[:item].text[0..250]}..."
+            xml.title "#{url_item[:item].user.screen_name} - #{url_item[:item].text}"
             xml.link url_item[:url]
             xml.pubDate url_item[:item].created_at
             xml.guid url_item[:item].id, :isPermaLink => false

@@ -1,6 +1,4 @@
 * Pull tweets in a different thread, rather than in the request
 * Cache tweets locally
 * Use the "since" param of twitter search
-* Only show tweets from friends...right now seems to show replies
-  (@Croaky has a pastie where he just scans through timeline
-   instead of doing a search)
+* show @replies to me
