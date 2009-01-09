@@ -3,21 +3,16 @@ module Twinkies
     include DataMapper::Resource
     property :id, Integer, :serial => true
     property :twitter_id, Integer
-    property :encoded_tweet, Text
     property :link, String
+    property :user, String
+    property :created_at, DateTime
+    property :text, Text, :lazy => false
 
-    def tweet=(s)
-      self.twitter_id = s.id
-      @tweet = s
-      self.encoded_tweet = Marshal.dump(s)
-    end
-
-    def tweet
-      @tweet ||= Marshal.load(encoded_tweet)
-    end
-
-    def text
-      tweet.text
+    def tweet=(tweet)
+      self.twitter_id = tweet.id
+      self.text = tweet.text
+      self.user = tweet.user.screen_name
+      self.created_at = tweet.created_at
     end
 
     def save

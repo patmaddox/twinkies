@@ -10,11 +10,21 @@ require 'sinatra'
 
 include Twinkies
 
-def tweets
-  FriendSearcher.new(ENV['TWITTER_NICK'], ENV['TWITTER_PASS']).search('http')
+DataMapper.setup(:default, "sqlite3:///tmp/twinkies-test.db")
+
+def refresh_tweets
+  tweets = FriendSearcher.new(ENV['TWITTER_NICK'], ENV['TWITTER_PASS']).search('http')
+  UrlList.new(tweets) {|t| t.text}.each do |item|
+    Item.create :link => item[:url], :tweet => item[:item]
+  end
+end
+
+def items
+  Item.all(:order => [:id.desc])
 end
 
 get '/feed.xml' do
+  refresh_tweets
   builder do |xml|
     xml.instruct!
     xml.rss :version => '2.0' do
@@ -23,12 +33,12 @@ get '/feed.xml' do
         xml.description "#{ENV['TWITTER_NICK']}'s twitter URL feed"
         xml.link "http://twitter.com/#{ENV['TWITTER_NICK']}"
 
-        UrlList.new(tweets) {|t| t.text}.each do |url_item|
+        items.each do |tweet|
           xml.item do
-            xml.title "#{url_item[:item].user.screen_name} - #{url_item[:item].text}"
-            xml.link url_item[:url]
-            xml.pubDate url_item[:item].created_at
-            xml.guid url_item[:item].id, :isPermaLink => false
+            xml.title "#{tweet.user} - #{tweet.text}"
+            xml.link tweet.link
+            xml.pubDate tweet.created_at
+            xml.guid tweet.id, :isPermaLink => false
           end
         end
       end

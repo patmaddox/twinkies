@@ -7,6 +7,10 @@ module Twinkies
         @tweet = Twitter::Status.new
         @tweet.id = 123
         @tweet.text = "hello mang!"
+        @tweet.created_at = DateTime.parse('7/24/1985')
+        @user = Twitter::User.new
+        @user.screen_name = 'padillac'
+        @tweet.user = @user
         @item = Item.create :tweet => @tweet, :link => "http://foo"
       end
 
@@ -15,8 +19,15 @@ module Twinkies
       end
 
       it "should get the text from the tweet" do
-        @item.reload
         @item.text.should == "hello mang!"
+      end
+
+      it "should get the screen name from the tweet" do
+        @item.user.should == 'padillac'
+      end
+
+      it "should get the date from the tweet" do
+        @item.created_at.should == DateTime.parse('7/24/1985')
       end
 
       describe "created with the same twitter ID" do
