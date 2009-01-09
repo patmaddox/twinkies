@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+begin
+  require 'twinkies'
+rescue LoadError
+  $:.unshift File.dirname(__FILE__) + '/../lib'
+  require 'twinkies'
+end
+require 'sinatra'
+
+include Twinkies
+
+def tweets
+  FriendSearcher.new(ENV['TWITTER_NICK'], ENV['TWITTER_PASS']).search('http')
+end
+
+get '/feed.xml' do
+  builder do |xml|
+    xml.instruct!
+    xml.rss :version => '2.0'
+    xml.channel do
+      xml.title "padillac's twitter URL feed"
+
+      UrlList.new(tweets) {|t| t.text}.each do |url_item|
+        xml.item do
+          xml.title "#{url_item[:item].from_user} - #{url_item[:item].text[0..250]}..."
+          xml.link url_item[:url]
+        end
+      end
+    end
+  end
+end
