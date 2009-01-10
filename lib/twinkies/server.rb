@@ -32,14 +32,21 @@ module Twinkies
 
     def handle_request
       username = @username # builder must instance_eval?
+
       get '/feed.xml' do
+        pieces = ['http://', request.env['SERVER_NAME']]
+        pieces << ":#{request.env['SERVER_PORT']}" unless request.env['SERVER_PORT'].to_i == 80
+        pieces << request.env['REQUEST_PATH']
+        request_path = pieces.join
+
         builder do |xml|
           xml.instruct!
-          xml.rss :version => '2.0' do
+          xml.rss :version => '2.0', "xmlns:atom" => "http://www.w3.org/2005/Atom" do
             xml.channel do
               xml.title "#{username}'s twitter URL feed"
               xml.description "#{username}'s twitter URL feed"
               xml.link "http://twitter.com/#{username}"
+              xml.tag! "atom:link", :rel => "self", :href => request_path
 
               Item.latest.each do |tweet|
                 xml.item do
