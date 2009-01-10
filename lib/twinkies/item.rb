@@ -7,6 +7,7 @@ module Twinkies
     property :user, String
     property :created_at, DateTime
     property :text, Text, :lazy => false
+    property :guid, String, :default => Proc.new { Guid.new.to_s }
 
     def tweet=(tweet)
       self.twitter_id = tweet.id

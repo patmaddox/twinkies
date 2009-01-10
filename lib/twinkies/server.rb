@@ -53,7 +53,7 @@ module Twinkies
                   xml.title "#{tweet.user} - #{tweet.text}"
                   xml.link tweet.link
                   xml.pubDate tweet.created_at.rfc822
-                  xml.guid tweet.id, :isPermaLink => false
+                  xml.guid tweet.guid, :isPermaLink => false
                 end
               end
             end
