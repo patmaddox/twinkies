@@ -13,6 +13,7 @@ module Twinkies
       rescue Twitter::CantConnect => e
         # twitter's down, who'da thunk?!
         $stderr.puts e
+        []
       end
     end
   end
