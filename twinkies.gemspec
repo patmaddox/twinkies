@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dm-core'
   s.add_dependency 'do_sqlite3'
   s.add_dependency 'guid'
+  s.add_dependency 'twitter'
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
