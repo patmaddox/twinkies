@@ -36,6 +36,12 @@ module Twinkies
           i.should == @item
         end
 
+        it "should return existing record if URLs are same (and when there's one different)" do
+          exist = Item.create :tweet => @tweet, :link => "http://bar"
+          i = Item.create :tweet => @tweet, :link => "http://bar"
+          i.should == exist
+        end
+
         it "should create a new item if URLs are different" do
           i = Item.create :tweet => @tweet, :link => "http://bar"
           i.should_not == @item

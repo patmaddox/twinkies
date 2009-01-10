@@ -17,9 +17,8 @@ module Twinkies
     end
 
     def save(context=:default)
-      @existing = Item.first(:twitter_id => twitter_id)
-      if @existing && @existing.link == link
-        self.id = @existing.id
+      if existing = Item.first(:twitter_id => twitter_id, :link => link)
+        self.id = existing.id
         true
       else
         super
