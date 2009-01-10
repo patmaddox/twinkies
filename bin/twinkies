@@ -1,12 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'ostruct'
-begin
-  require 'twinkies'
-rescue LoadError
-  $:.unshift File.dirname(__FILE__) + '/../lib'
-  require 'twinkies'
-end
+$:.unshift File.dirname(__FILE__) + '/../lib'
+require 'twinkies'
 
 def run_app(base_dir)
   config = OpenStruct.new
@@ -15,6 +11,7 @@ def run_app(base_dir)
     config.tweet_db = File.expand_path(config.tweet_db)
   end
   require 'twinkies/server'
+  Sinatra::Application.default_options[:env] = :production
   Twinkies::Server.new(config).run
 end
 
