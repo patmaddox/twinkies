@@ -20,6 +20,7 @@ module Twinkies
     end
 
     def start_tweet_refresher
+      Thread.abort_on_exception = true
       Thread.new do
         loop do
           puts "refreshing tweets..."
