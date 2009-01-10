@@ -1,5 +1,5 @@
 class DateTime
-  def pretty
-    strftime '%a, %d %b %Y %H:%M:%S'
+  def rfc822
+    strftime '%a, %d %b %Y %H:%M:%S %z'
   end
 end
