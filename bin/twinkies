@@ -8,23 +8,37 @@ rescue LoadError
   require 'twinkies'
 end
 
-username = ARGV.first
-config_file = 'twinkies_config.rb'
+def run_app(base_dir)
+  config = OpenStruct.new
+  Dir.chdir(base_dir) do
+    eval File.read('twinkies_config.rb')
+    config.tweet_db = File.expand_path(config.tweet_db)
+  end
+  require 'twinkies/server'
+  Twinkies::Server.new(config).run
+end
+
 if ARGV.size == 1
-  FileUtils.mkdir(username)
-  Dir.chdir(username) do
-    File.open(config_file, 'w+') do |file|
-      file << "config.username='#{username}'\n"
-      file << "config.password='CHANGE_ME'\n"
-      file << "config.tweet_db='#{username}_tweets.db'\n"
+  username = ARGV.first
+
+  if File.directory?(username)
+    run_app username
+  else
+    FileUtils.mkdir(username)
+    Dir.chdir(username) do
+      File.open('twinkies_config.rb', 'w+') do |file|
+        file << "config.username='#{username}'\n"
+        file << "config.password='CHANGE_ME'\n"
+        file << "config.tweet_db='#{username}_tweets.db'\n"
+      end
     end
   end
 else
-  if File.exists?(config_file)
-    config = OpenStruct.new
-    eval File.read(config_file)
-    config.tweet_db = File.expand_path(config.tweet_db)
-    require 'twinkies/server'
-    Twinkies::Server.new(config).run
+  if File.exists?('twinkies_config.rb')
+    run_app '.'
+  else
+    puts "Usage: twinkies [username]"
+    puts "\ttwinkies padillac - creates a new dir named padillac with a config file if none exists, or runs a twinkie instance with the config in that dir"
+    puts "\ttwinkies - will run a twinkies instance with the config in the current dir"
   end
 end
