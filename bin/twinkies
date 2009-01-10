@@ -1,39 +1,30 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+require 'ostruct'
 begin
   require 'twinkies'
 rescue LoadError
   $:.unshift File.dirname(__FILE__) + '/../lib'
   require 'twinkies'
 end
-require 'sinatra'
 
-include Twinkies
-
-DataMapper.setup(:default, "sqlite3:///tmp/twinkies-test.db")
-
-Thread.new do
-  loop { puts "refreshing tweets..."; Item.refresh; sleep(60) }
-end
-
-get '/feed.xml' do
-  builder do |xml|
-    xml.instruct!
-    xml.rss :version => '2.0' do
-      xml.channel do
-        xml.title "#{ENV['TWITTER_NICK']}'s twitter URL feed"
-        xml.description "#{ENV['TWITTER_NICK']}'s twitter URL feed"
-        xml.link "http://twitter.com/#{ENV['TWITTER_NICK']}"
-
-        Item.latest.each do |tweet|
-          xml.item do
-            xml.title "#{tweet.user} - #{tweet.text}"
-            xml.link tweet.link
-            xml.pubDate tweet.created_at
-            xml.guid tweet.id, :isPermaLink => false
-          end
-        end
-      end
+username = ARGV.first
+config_file = 'twinkies_config.rb'
+if ARGV.size == 1
+  FileUtils.mkdir(username)
+  Dir.chdir(username) do
+    File.open(config_file, 'w+') do |file|
+      file << "config.username='#{username}'\n"
+      file << "config.password='CHANGE_ME'\n"
+      file << "config.tweet_db='#{username}_tweets.db'\n"
     end
+  end
+else
+  if File.exists?(config_file)
+    config = OpenStruct.new
+    eval File.read(config_file)
+    config.tweet_db = File.expand_path(config.tweet_db)
+    require 'twinkies/server'
+    Twinkies::Server.new(config).run
   end
 end
