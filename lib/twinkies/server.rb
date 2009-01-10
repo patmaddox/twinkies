@@ -12,6 +12,7 @@ module Twinkies
       setup_db
       start_tweet_refresher
       handle_request
+      Sinatra::Base.run!
     end
 
     def setup_db
@@ -32,7 +33,7 @@ module Twinkies
 
     def handle_request
       username = @username # instance_eval..
-      get '/feed.xml' do
+      Sinatra::Base.get '/feed.xml' do
         pieces = ['http://', request.env['SERVER_NAME']]
         pieces << ":#{request.env['SERVER_PORT']}" unless request.env['SERVER_PORT'].to_i == 80
         pieces << request.env['REQUEST_PATH']

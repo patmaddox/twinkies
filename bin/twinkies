@@ -11,7 +11,7 @@ def run_app(base_dir)
     config.tweet_db = File.expand_path(config.tweet_db)
   end
   require 'twinkies/server'
-  Sinatra::Application.default_options[:env] = :production
+  Sinatra::Application.set :env, :production
   Twinkies::Server.new(config).run
 end
 

@@ -3,3 +3,4 @@
 * command line option to autoset password
 * make port configurable
 * clean up the binary maybe?
+* see if I'm using sinatra right at all (was using old version. doh!)
