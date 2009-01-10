@@ -1,7 +1,21 @@
 twinkies
 ========
 
-Description goes here.
+twinkies is a little app that generates an RSS feed of the links that
+appear in your twitter timeline.  It's basically an ad hoc feed
+aggregator with the links coming from people you presumably like.
+
+To get started, type
+
+  twinkies my_twitter_username
+
+This will create a folder called my_twitter_username with a config
+file.  Edit the config file to hold your password.  Then you can
+either type twinkies from within that dir to start it up, or type
+'twinkies path/to/config/dir' if you're not within the directory
+(e.g. if you have a script to start up multiples twinkies).
+
+Definite work in progress, but it seems okay for now.
 
 COPYRIGHT
 =========
