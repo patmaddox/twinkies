@@ -17,12 +17,16 @@ module Twinkies
     end
 
     def save(context=:default)
-      if existing = Item.first(:twitter_id => twitter_id, :link => link)
+      if existing = self.class.matching(self)
         self.id = existing.id
         true
       else
         super
       end
+    end
+
+    def self.matching(item, options={})
+      first({:twitter_id => item.twitter_id, :link => item.link}.merge(options))
     end
 
     def self.latest
