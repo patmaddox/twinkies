@@ -43,5 +43,10 @@ module Twinkies
         new_item.save
       end
     end
+
+    def self.inherited(klass)
+      DataMapper::Resource.descendants << klass
+      super
+    end
   end
 end
