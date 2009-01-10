@@ -16,7 +16,7 @@ module Twinkies
       self.created_at = tweet.created_at
     end
 
-    def save
+    def save(context=:default)
       @existing = Item.first(:twitter_id => twitter_id)
       if @existing && @existing.link == link
         self.id = @existing.id
