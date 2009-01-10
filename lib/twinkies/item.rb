@@ -35,7 +35,9 @@ module Twinkies
 
       tweets = FriendSearcher.new(username, password).search('http')
       UrlList.new(tweets) {|t| t.text}.each do |item|
-        create :link => item[:url], :tweet => item[:item]
+        new_item = new :link => item[:url], :tweet => item[:item]
+        yield(new_item) if block_given?
+        new_item.save
       end
     end
   end
